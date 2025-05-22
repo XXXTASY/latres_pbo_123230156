@@ -1,0 +1,3 @@
+- **MYSQL-CONNECTOR**: You don't need to add mysql-connector-j-version.jar file.
+- **Notes**: Please read some notes that I wrote on each code.
+- **Database**: I put the database that I made inside the database folder.
