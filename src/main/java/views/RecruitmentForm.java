@@ -4,16 +4,17 @@
  */
 package views;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 import controllers.RecruitmentController;
 import models.AndroidDeveloper;
 import models.Candidate;
 import models.WebDeveloper;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
 /**
  *
  * @author XXXTASY was helped by GEMINI (for better formatting and new ways, XXXTASY just discovered it💀)
@@ -110,11 +111,11 @@ public class RecruitmentForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Name", "Path", "Writing", "Coding", "Interview", "Score", "Status" // Tambahkan ID
+                "ID", "Name", "Path", "Writing", "Coding", "Interview", "Score", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false // Semua false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
