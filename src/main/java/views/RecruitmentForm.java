@@ -22,7 +22,7 @@ public class RecruitmentForm extends javax.swing.JFrame {
 
     private RecruitmentController controller;
     private DefaultTableModel tableModel;
-    private int selectedCandidateId = -1; // Tambahkan variabel untuk menyimpan ID kandidat yang dipilih
+    private int selectedCandidateId = -1;
 
     public RecruitmentForm() {
         initComponents();
@@ -33,7 +33,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
     }
 
     private void initTable() {
-        // Tambahkan kolom "ID" di awal
         tableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Path", "Writing", "Coding", "Interview", "Score", "Status"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -41,20 +40,18 @@ public class RecruitmentForm extends javax.swing.JFrame {
             }
         };
         tblCandidates.setModel(tableModel);
-
-        // Opsional: Sembunyikan kolom ID jika tidak ingin ditampilkan
-         tblCandidates.getColumnModel().getColumn(0).setMinWidth(0);
-         tblCandidates.getColumnModel().getColumn(0).setMaxWidth(0);
-         tblCandidates.getColumnModel().getColumn(0).setWidth(0);
+        tblCandidates.getColumnModel().getColumn(0).setMinWidth(0);
+        tblCandidates.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblCandidates.getColumnModel().getColumn(0).setWidth(0);
     }
 
     private void loadCandidates() {
-        tableModel.setRowCount(0); // Clear existing data
+        tableModel.setRowCount(0);
         try {
             List<Candidate> candidates = controller.getAllCandidates();
             for (Candidate c : candidates) {
                 Vector<Object> row = new Vector<>();
-                row.add(c.getId()); // Tambahkan ID ke baris
+                row.add(c.getId());
                 row.add(c.getName());
                 row.add(c.getPath());
                 row.add(c.getWritingScore());
@@ -75,9 +72,8 @@ public class RecruitmentForm extends javax.swing.JFrame {
         txtWriting.setText("");
         txtCoding.setText("");
         txtInterview.setText("");
-        selectedCandidateId = -1; // Reset ID yang dipilih
+        selectedCandidateId = -1;
         btnAdd.setEnabled(true); // Aktifkan tombol Add
-        // txtName.setEnabled(true); // Nama sekarang bisa diupdate, jadi tidak perlu di-disable/enable di sini
     }
 
     /**
@@ -250,7 +246,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
                 return;
             }
             
-            // Validasi skor 0-100 secara eksplisit di sini juga untuk feedback user yang cepat
             if (writing < 0 || writing > 100 || coding < 0 || coding > 100 || interview < 0 || interview > 100) {
                  JOptionPane.showMessageDialog(this, "Scores must be between 0 and 100.", "Input Error", JOptionPane.WARNING_MESSAGE);
                  return;
@@ -259,7 +254,7 @@ public class RecruitmentForm extends javax.swing.JFrame {
             Candidate candidate;
             if ("Android Dev".equals(path)) {
                 candidate = new AndroidDeveloper(name, writing, coding, interview);
-            } else { // Web Dev
+            } else {
                 candidate = new WebDeveloper(name, writing, coding, interview);
             }
 
@@ -274,7 +269,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for scores.", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException e) {
-            // Check for duplicate name error (assuming 'name' is unique in DB)
             if (e.getMessage().contains("Duplicate entry") && e.getMessage().contains("for key 'name'")) {
                  JOptionPane.showMessageDialog(this, "Candidate with this name already exists. Please use a unique name.", "Input Error", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -284,7 +278,7 @@ public class RecruitmentForm extends javax.swing.JFrame {
     }
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-        if (selectedCandidateId == -1) { // Periksa ID yang dipilih
+        if (selectedCandidateId == -1) {
             JOptionPane.showMessageDialog(this, "Please select a candidate to update.", "Selection Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -301,7 +295,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
                 return;
             }
             
-            // Validasi skor 0-100 secara eksplisit di sini juga
             if (writing < 0 || writing > 100 || coding < 0 || coding > 100 || interview < 0 || interview > 100) {
                  JOptionPane.showMessageDialog(this, "Scores must be between 0 and 100.", "Input Error", JOptionPane.WARNING_MESSAGE);
                  return;
@@ -309,9 +302,9 @@ public class RecruitmentForm extends javax.swing.JFrame {
 
             Candidate candidate;
             if ("Android Dev".equals(path)) {
-                candidate = new AndroidDeveloper(selectedCandidateId, name, writing, coding, interview); // Gunakan ID
-            } else { // Web Dev
-                candidate = new WebDeveloper(selectedCandidateId, name, writing, coding, interview); // Gunakan ID
+                candidate = new AndroidDeveloper(selectedCandidateId, name, writing, coding, interview);
+            } else {
+                candidate = new WebDeveloper(selectedCandidateId, name, writing, coding, interview);
             }
 
             boolean success = controller.updateCandidate(candidate);
@@ -325,7 +318,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for scores.", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException e) {
-            // Check for duplicate name error if name is unique in DB
             if (e.getMessage().contains("Duplicate entry") && e.getMessage().contains("for key 'name'")) {
                  JOptionPane.showMessageDialog(this, "Candidate with this name already exists. Please use a unique name.", "Input Error", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -335,17 +327,17 @@ public class RecruitmentForm extends javax.swing.JFrame {
     }
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {
-        if (selectedCandidateId == -1) { // Periksa ID yang dipilih
+        if (selectedCandidateId == -1) {
             JOptionPane.showMessageDialog(this, "Please select a candidate to delete.", "Selection Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String nameToDelete = txtName.getText(); // Ambil nama dari field untuk konfirmasi
+        String nameToDelete = txtName.getText();
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + nameToDelete + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                boolean success = controller.deleteCandidate(selectedCandidateId); // Hapus berdasarkan ID
+                boolean success = controller.deleteCandidate(selectedCandidateId);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Candidate deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     loadCandidates();
@@ -366,9 +358,9 @@ public class RecruitmentForm extends javax.swing.JFrame {
     private void tblCandidatesMouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = tblCandidates.getSelectedRow();
         if (selectedRow != -1) {
-            selectedCandidateId = (int) tableModel.getValueAt(selectedRow, 0); // Ambil ID dari kolom pertama (ID)
-            txtName.setText(tableModel.getValueAt(selectedRow, 1).toString()); // Kolom nama sekarang indeks 1
-            cmbPath.setSelectedItem(tableModel.getValueAt(selectedRow, 2).toString()); // Kolom path indeks 2
+            selectedCandidateId = (int) tableModel.getValueAt(selectedRow, 0);
+            txtName.setText(tableModel.getValueAt(selectedRow, 1).toString());
+            cmbPath.setSelectedItem(tableModel.getValueAt(selectedRow, 2).toString());
             txtWriting.setText(tableModel.getValueAt(selectedRow, 3).toString());
             txtCoding.setText(tableModel.getValueAt(selectedRow, 4).toString());
             txtInterview.setText(tableModel.getValueAt(selectedRow, 5).toString());
@@ -380,7 +372,6 @@ public class RecruitmentForm extends javax.swing.JFrame {
         }
     }
 
-    // Variables declaration - do not modify
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
@@ -397,5 +388,4 @@ public class RecruitmentForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtInterview;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtWriting;
-    // End of variables declaration
 }
